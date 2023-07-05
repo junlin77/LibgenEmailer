@@ -23,17 +23,20 @@ def send_to_kindle(request):
     if request.method == "POST":
         item_to_download = request.POST.get("book_to_download")
         item_to_download = ast.literal_eval(item_to_download) # convert string to dict
-        kindle_email = request.POST.get("kindle_email")
+        kindle_email = request.GET.get("kindle_email")
+        print(kindle_email)
         # resolve_download_links()
         s = LibgenSearch()
         
         url = s.resolve_download_links(item_to_download)
-        print(url)
+
+        # TODO: add logic to try other link if failed
+        url = url['Cloudflare']
+
         # Send a GET request to download the file
         response = urllib.request.urlopen(url)
 
-        # Extract the filename from the URL
-        filename = os.path.basename(url)
+        filename = os.path.basename(item_to_download['Title'] + '.' + item_to_download['Extension'])
 
         # Get the Django default file saving directory
         destination_directory = settings.MEDIA_ROOT
@@ -53,7 +56,7 @@ def send_to_kindle(request):
 
         # Send the file as an email attachment
         email = EmailMessage(
-            'File Attachment',
+            'Send to Kindle Test',
             'Please find the attached file.',
             settings.DEFAULT_FROM_EMAIL,
             [kindle_email],

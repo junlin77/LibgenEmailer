@@ -9,17 +9,15 @@
     </div>
     <div class="form">
         <form id="findingForm" action="{% url 'index' %}" method="GET">
-
             <label for="urlInput">Book title:</label>
             <input type="text" id="titleInput" name="title" required>
-            
             <button type="submit">Search</button>
-          </form>
+        </form>
     </div>
     <table>
         <thead>
             <tr>
-                <th>ID</th>
+                <!-- <th>ID</th> -->
                 <th>Author</th>
                 <th>Title</th>
                 <th>Publisher</th>
@@ -37,7 +35,7 @@
         <tbody>
             {% for book in books %}
             <tr>
-                <td>{{ book.ID }}</td>
+                <!-- <td>{{ book.ID }}</td> -->
                 <td>{{ book.Author }}</td>
                 <td>{{ book.Title }}</td>
                 <td>{{ book.Publisher }}</td>
