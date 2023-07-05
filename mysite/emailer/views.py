@@ -8,7 +8,11 @@ from libgen_api import LibgenSearch
 
 def index(request):
     s = LibgenSearch()
-    results = s.search_title("Meditations")
+    title = request.GET.get("title")
+    if title is None:
+        results = []
+    else:
+        results = s.search_title(title)
     books = {"books": results}
     return render(request, "emailer/index.html", books)
 

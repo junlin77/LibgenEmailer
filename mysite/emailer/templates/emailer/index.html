@@ -4,6 +4,18 @@
     <title>Book List</title>
 </head>
 <body>
+    <div class="header">ZlibraryEmailer
+        <p>Directly email books to your kindle!</p>
+    </div>
+    <div class="form">
+        <form id="myForm" action="{% url 'index' %}" method="GET">
+
+            <label for="urlInput">Book title:</label>
+            <input type="text" id="titleInput" name="title" required>
+            
+            <button type="submit">Search</button>
+          </form>
+    </div>
     <table>
         <thead>
             <tr>
