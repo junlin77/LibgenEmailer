@@ -7,14 +7,28 @@ from django.shortcuts import render
 from libgen_api import LibgenSearch
 from django.views.decorators.csrf import csrf_exempt
 import ast
+import re
+from django.http import JsonResponse
 
 def index(request):
     s = LibgenSearch()
     title = request.GET.get("title")
-    if title is None:
+    author = request.GET.get("author")
+    extension = request.GET.get("extension")
+
+    if title is None: # initial page load
         results = []
-    else:
+    elif len(title) > 3 and author == "" and extension == "": # title search
         results = s.search_title(title)
+    elif len(title) > 3 and (author != "" or extension != ""): # filtered title search 
+        title_filters = {"Author": author, "Extension": extension}
+        results = s.search_title_filtered(title, title_filters, exact_match=False)
+    elif len(title) <= 3 and author != "" and extension == "": # author search
+        results = s.search_author(author)
+    elif len(title) <= 3 and author != "" and extension != "": # filtered author search
+        author_filters = {"Extension": extension}
+        results = s.search_author_filtered(author, author_filters, exact_match=False)
+
     books = {"books": results}
     return render(request, "emailer/index.html", books)
 
@@ -23,14 +37,21 @@ def send_to_kindle(request):
     if request.method == "POST":
         item_to_download = request.POST.get("book_to_download")
         item_to_download = ast.literal_eval(item_to_download) # convert string to dict
-        kindle_email = request.GET.get("kindle_email")
+        kindle_email = request.POST.get("kindle_email")
         print(kindle_email)
+
+        # Server-side email validation
+        if not validate_email(kindle_email):
+            return HttpResponse("Invalid email address.")
+
         # resolve_download_links()
         s = LibgenSearch()
         
         url = s.resolve_download_links(item_to_download)
 
         # TODO: add logic to try other link if failed
+
+        # Get the Cloudflare link
         url = url['Cloudflare']
 
         # Send a GET request to download the file
@@ -62,17 +83,35 @@ def send_to_kindle(request):
             [kindle_email],
         )
         email.attach_file(file_path)
-        email.send()
 
-        # TODO: verify if email sent successfully 
+        try:
+            email.send()
+            # Delete the temporary file
+            delete_file(file_path)
+            return JsonResponse({'success': True})
+        except:
+            # Delete the temporary file
+            delete_file(file_path)
+            return JsonResponse({'success': False})
 
-        # Delete the temporary file
+def validate_email(email):
+    """
+    Perform server-side validation on the email address.
+    Returns True if the email is valid, False otherwise.
+    """
+    # Basic email format validation using regex
+    email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if not re.match(email_regex, email):
+        return False
+    return True
+
+def delete_file(file_path):
+    try:
         os.remove(file_path)
-
-        # Check if the file has been successfully deleted
+        # Check if the file has been successfully removed
         if not os.path.exists(file_path):
-            print("File deleted successfully from MEDIA_ROOT.")
+            print("File deleted successfully.")
         else:
-            print("Failed to delete the file in MEDIA_ROOT.")
-
-    return HttpResponse("Email sent successfully.")
+            print("Failed to delete the file.")
+    except OSError as e:
+        print(f"Error deleting the file: {str(e)}")

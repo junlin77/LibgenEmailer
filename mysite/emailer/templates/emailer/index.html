@@ -2,15 +2,23 @@
 <html>
 <head>
     <title>Book List</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- Include SweetAlert CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/sweetalert/dist/sweetalert.css">
 </head>
 <body>
     <div class="header">ZlibraryEmailer
-        <p>Directly email books to your kindle!</p>
+        <p>Directly email books to your Kindle!</p>
     </div>
     <div class="form">
         <form id="findingForm" action="{% url 'index' %}" method="GET">
-            <label for="urlInput">Book title:</label>
-            <input type="text" id="titleInput" name="title" required>
+            <label for="urlInput">Title:</label>
+            <input type="text" id="titleInput" name="title">
+            <label for="urlInput">Author:</label>
+            <input type="text" id="authorInput" name="author">
+            <label for="urlInput">Extension:</label>
+            <input type="text" id="extensionInput" name="extension">
             <button type="submit">Search</button>
         </form>
     </div>
@@ -26,16 +34,12 @@
                 <th>Language</th>
                 <th>Size</th>
                 <th>Extension</th>
-                <!-- <th>Mirror 1</th>
-                <th>Mirror 2</th>
-                <th>Mirror 3</th> -->
                 <th>Send-to-kindle</th>
             </tr>
         </thead>
         <tbody>
             {% for book in books %}
             <tr>
-                <!-- <td>{{ book.ID }}</td> -->
                 <td>{{ book.Author }}</td>
                 <td>{{ book.Title }}</td>
                 <td>{{ book.Publisher }}</td>
@@ -44,17 +48,70 @@
                 <td>{{ book.Language }}</td>
                 <td>{{ book.Size }}</td>
                 <td>{{ book.Extension }}</td>
-                <!-- <td><a href="{{ book.Mirror_1 }}">Mirror 1</a></td>
-                <td><a href="{{ book.Mirror_2 }}">Mirror 2</a></td>
-                <td><a href="{{ book.Mirror_3 }}">Mirror 3</a></td> -->
-                <form id="sendingForm" action="{% url 'send_to_kindle' %}" method="POST">
-                    <!-- {% csrf_token %} -->
+                <td>
+                    <button type="button" class="btn btn-primary send-button" data-toggle="modal" data-target="#emailModal">Send</button>
+                </td>
+                <!-- Hidden form inside modal -->
+                <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
+                    {% csrf_token %}
                     <input type="hidden" name="book_to_download" value="{{ book }}">
-                    <td><button type="submit">Send</button></td>
+                    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="emailModalLabel">Enter Email Address</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="emailInput">Email address:</label>
+                                    <input type="email" id="emailInput" name="kindle_email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                                    <div class="invalid-feedback">
+                                        Please enter a valid email address.
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Include SweetAlert JS -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.sending-form').submit(function(e) {
+                e.preventDefault(); // Prevent form submission
+                var form = $(this);
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            swal("Success!", "Email sent successfully.", "success");
+                        } else {
+                            swal("Error!", "Failed to send the email.", "error");
+                        }
+                    },
+                    error: function() {
+                        swal("Error!", "An error occurred.", "error");
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
