@@ -13,15 +13,27 @@
     </div>
     <div class="form">
         <form id="findingForm" action="{% url 'index' %}" method="GET">
-            <label for="urlInput">Title:</label>
+            <label for="titleInput">Title:</label>
             <input type="text" id="titleInput" name="title">
-            <label for="urlInput">Author:</label>
+            <label for="authorInput">Author:</label>
             <input type="text" id="authorInput" name="author">
-            <label for="urlInput">Extension:</label>
-            <input type="text" id="extensionInput" name="extension">
+            <label for="extensionInput">Extension:</label>
+            <select id="extensionInput" name="extension">
+                <option value="">None</option>
+                <option value="epub">EPUB</option>
+                <option value="pdf">PDF</option>
+                <option value="azw3">AZW3</option>
+                <option value="mobi">MOBI</option>
+                <option value="prc">PRC</option>
+                <option value="azw">AZW</option>
+                <option value="txt">TXT</option>
+                <option value="html">HTML</option>
+                <option value="doc">DOC</option>
+                <option value="docx">DOCX</option>
+            </select>
             <button type="submit">Search</button>
         </form>
-    </div>
+    </div>    
     <table>
         <thead>
             <tr>

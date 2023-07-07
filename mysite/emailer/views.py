@@ -50,7 +50,6 @@ def send_to_kindle(request):
         url = s.resolve_download_links(item_to_download)
 
         # TODO: add logic to try other link if failed
-
         # Get the Cloudflare link
         url = url['Cloudflare']
 
