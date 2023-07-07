@@ -12,9 +12,9 @@
         <p>Directly email books to your Kindle!</p>
     </div>
     <div class="form">
-        <form id="findingForm" action="{% url 'index' %}" method="GET">
+        <form id="findingForm" action="{% url 'index' %}" method="GET" onsubmit="return validateForm()">
             <label for="titleInput">Title:</label>
-            <input type="text" id="titleInput" name="title">
+            <input type="text" id="titleInput" name="title" pattern=".{3,}" title="Minimum 3 characters required">
             <label for="authorInput">Author:</label>
             <input type="text" id="authorInput" name="author">
             <label for="extensionInput">Extension:</label>
@@ -33,7 +33,7 @@
             </select>
             <button type="submit">Search</button>
         </form>
-    </div>    
+    </div>
     <table>
         <thead>
             <tr>
@@ -102,6 +102,18 @@
     <!-- Include SweetAlert JS -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
+        function validateForm() {
+            var titleInput = document.getElementById("titleInput");
+            var authorInput = document.getElementById("authorInput");
+
+            if (titleInput.value.trim() === "" && authorInput.value.trim() === "") {
+                alert("Please enter either the title or author.");
+                return false;
+            }
+
+            return true;
+        }
+        
         $(document).ready(function() {
             $('.sending-form').submit(function(e) {
                 e.preventDefault(); // Prevent form submission

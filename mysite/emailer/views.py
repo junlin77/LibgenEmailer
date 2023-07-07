@@ -18,14 +18,14 @@ def index(request):
 
     if title is None: # initial page load
         results = []
-    elif len(title) > 3 and author == "" and extension == "": # title search
+    elif len(title) >= 3 and author == "" and extension == "": # title search
         results = s.search_title(title)
     elif len(title) > 3 and (author != "" or extension != ""): # filtered title search 
         title_filters = {"Author": author, "Extension": extension}
         results = s.search_title_filtered(title, title_filters, exact_match=False)
-    elif len(title) <= 3 and author != "" and extension == "": # author search
+    elif len(title) < 3 and author != "" and extension == "": # author search
         results = s.search_author(author)
-    elif len(title) <= 3 and author != "" and extension != "": # filtered author search
+    elif len(title) < 3 and author != "" and extension != "": # filtered author search
         author_filters = {"Extension": extension}
         results = s.search_author_filtered(author, author_filters, exact_match=False)
 
