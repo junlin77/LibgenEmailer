@@ -2,9 +2,7 @@
 <html>
 <head>
     <title>Book List</title>
-    <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <!-- Include SweetAlert CSS -->
     <link rel="stylesheet" href="https://unpkg.com/sweetalert/dist/sweetalert.css">
 </head>
 <body>
@@ -37,7 +35,6 @@
     <table>
         <thead>
             <tr>
-                <!-- <th>ID</th> -->
                 <th>Author</th>
                 <th>Title</th>
                 <th>Publisher</th>
@@ -96,10 +93,8 @@
         </tbody>
     </table>
 
-    <!-- Include Bootstrap JS and jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <!-- Include SweetAlert JS -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         function validateForm() {
@@ -113,7 +108,7 @@
 
             return true;
         }
-        
+
         $(document).ready(function() {
             $('.sending-form').submit(function(e) {
                 e.preventDefault(); // Prevent form submission

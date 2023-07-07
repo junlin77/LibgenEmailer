@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.shortcuts import render
 from libgen_api import LibgenSearch
-from django.views.decorators.csrf import csrf_exempt
 import ast
 import re
 from django.http import JsonResponse
@@ -32,7 +31,6 @@ def index(request):
     books = {"books": results}
     return render(request, "emailer/index.html", books)
 
-@csrf_exempt
 def send_to_kindle(request):
     if request.method == "POST":
         item_to_download = request.POST.get("book_to_download")
@@ -48,13 +46,19 @@ def send_to_kindle(request):
         s = LibgenSearch()
         
         url = s.resolve_download_links(item_to_download)
-
-        # TODO: add logic to try other link if failed
-        # Get the Cloudflare link
-        url = url['Cloudflare']
-
-        # Send a GET request to download the file
-        response = urllib.request.urlopen(url)
+        
+        # Iterate through the download links
+        for key in url:
+            try:
+                # Send a GET request to download the file
+                response = urllib.request.urlopen(url[key])
+                # If the request is successful, break out of the loop
+                break
+            except Exception as e:
+                print(f"Failed to download using {key} URL: {str(e)}")
+        else:
+            # If all URLs failed, handle the error or display a message
+            print("Failed to download from all URLs.")
 
         filename = os.path.basename(item_to_download['Title'] + '.' + item_to_download['Extension'])
 
