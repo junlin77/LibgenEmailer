@@ -11,9 +11,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'emailer/style.css' %}">
 </head>
-<body class="lightmode">
-    <div class="header">LibgenEmailer
-        <p>Email books from Libgen to your Kindle!</p>
+<body class="light-mode">
+    <div class="header light-mode">
+        <div class="header-text">
+            <h5>LibgenEmailer</h5>
+            <p>Email books from Libgen to your Kindle!</p>
+        </div>
+        <div class="toggle-container">
+            <input type="checkbox" id="toggleButton" class="toggle-input">
+            <label for="toggleButton" class="toggle-label">
+                <img src="{% static 'images/dark.png' %}" alt="Light Mode" class="light-mode-icon">
+                <img src="{% static 'images/light.png' %}" alt="Dark Mode" class="dark-mode-icon">
+            </label>
+        </div>                   
     </div>
     <main>
         <div class="form">
@@ -22,7 +32,6 @@
                     <i class="fas fa-book"></i>
                     <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required">
                 </div>
-                    
                 <div class="input-icon">
                     <i class="fa-solid fa-user"></i>
                     <input type="text" id="authorInput" name="author" placeholder="Author">
@@ -32,20 +41,6 @@
                     <i class="fa-solid fa-file"></i>
                     <input type="text" id="extensionInput" name="extension" placeholder="Extension">
                 </div>                  
-                <!-- <label for="extensionInput">Extension:</label> -->
-                <!-- <select id="extensionInput" name="extension">
-                    <option value="">None</option>
-                    <option value="epub">EPUB</option>
-                    <option value="pdf">PDF</option>
-                    <option value="azw3">AZW3</option>
-                    <option value="mobi">MOBI</option>
-                    <option value="prc">PRC</option>
-                    <option value="azw">AZW</option>
-                    <option value="txt">TXT</option>
-                    <option value="html">HTML</option>
-                    <option value="doc">DOC</option>
-                    <option value="docx">DOCX</option>
-                </select> -->
                 <button type="submit">Search</button>
             </form>
         </div>
@@ -158,9 +153,44 @@
             });
         });
 
-        $('#toggleButton').on('click', function() {
-            $('body').toggleClass('light-mode');
-            });
+        $(document).ready(function() {
+            // Check if the preferred mode is stored in localStorage
+            var preferredMode = localStorage.getItem('preferredMode');
+
+            // If no preferred mode is stored, default to dark mode
+            if (preferredMode === null) {
+                preferredMode = 'dark';
+            }
+
+            // Set the body class based on the preferred mode
+            $('body').addClass(preferredMode + '-mode');
+
+            // Update the toggle button state based on the preferred mode
+            $('#toggleButton').prop('checked', preferredMode === 'light');
+
+            // Function to handle toggle button change
+            function handleToggleButton() {
+                var isLightMode = $(this).is(':checked');
+
+                // Update the body class and preferred mode based on the toggle button state
+                if (isLightMode) {
+                    $('body').removeClass('dark-mode').addClass('light-mode');
+                    localStorage.setItem('preferredMode', 'light');
+                    $('.dark-mode-icon').hide();
+                    $('.light-mode-icon').show();
+                } else {
+                    $('body').removeClass('light-mode').addClass('dark-mode');
+                    localStorage.setItem('preferredMode', 'dark');
+                    $('.light-mode-icon').hide();
+                    $('.dark-mode-icon').show();
+                }
+            }
+            // Attach the handleToggleButton function to the toggle button change event
+            $('#toggleButton').on('change', handleToggleButton);
+
+            // Trigger the toggle button click event to apply the initial mode
+            $('#toggleButton').trigger('change');
+        });
     </script>
 </body>
 </html>
