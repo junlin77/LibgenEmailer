@@ -1,0 +1,96 @@
+body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #0e1624;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-left: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: large;
+    color: #fff;
+}
+
+.header p {
+    font-size: small;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#findingForm {
+    display: flex;
+    gap: 10px;
+    color: rgb(255, 255, 255, 0.16);
+}
+
+input {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background-color: transparent;
+    padding: 8px;
+    color: inherit;
+    border-radius: 2px;
+}
+
+.results {
+    color: #fff;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.results th {
+    color: rgb(255, 255, 255, 0.5);
+}
+
+.modal-content {
+    color: black;
+}
+
+button.btn-primary {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    transition: transform 0.3s ease;
+}
+
+button.btn-primary:hover {
+    transform: scale(1.2);
+}
+
+button:focus {
+    outline:none;
+    box-shadow: none;
+  }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #333333;
+}
+
+th, td {
+    border: 1px solid #333333;
+    padding: 8px;
+    text-align: left;
+}
+
+.table-button {
+    text-align: center;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: medium;
+    font-family: Arial, Helvetica, sans-serif;
+}

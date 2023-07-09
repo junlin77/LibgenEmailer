@@ -1,22 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Book List</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/sweetalert/dist/sweetalert.css">
+    <link rel="stylesheet" href="{% static 'emailer/style.css' %}">
 </head>
 <body>
-    <div class="header">ZlibraryEmailer
-        <p>Directly email books to your Kindle!</p>
+    <div class="header">LibgenEmailer
+        <p>Email books from Libgen to your Kindle!</p>
     </div>
     <div class="form">
         <form id="findingForm" action="{% url 'index' %}" method="GET" onsubmit="return validateForm()">
-            <label for="titleInput">Title:</label>
-            <input type="text" id="titleInput" name="title" pattern=".{3,}" title="Minimum 3 characters required">
-            <label for="authorInput">Author:</label>
-            <input type="text" id="authorInput" name="author">
-            <label for="extensionInput">Extension:</label>
-            <select id="extensionInput" name="extension">
+            <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required">
+            <input type="text" id="authorInput" name="author" placeholder="Author">
+            <input type="text" id="extensionInput" name="extension" placeholder="Extension">
+            <!-- <label for="extensionInput">Extension:</label> -->
+            <!-- <select id="extensionInput" name="extension">
                 <option value="">None</option>
                 <option value="epub">EPUB</option>
                 <option value="pdf">PDF</option>
@@ -28,74 +29,80 @@
                 <option value="html">HTML</option>
                 <option value="doc">DOC</option>
                 <option value="docx">DOCX</option>
-            </select>
+            </select> -->
             <button type="submit">Search</button>
         </form>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Author</th>
-                <th>Title</th>
-                <th>Publisher</th>
-                <th>Year</th>
-                <th>Pages</th>
-                <th>Language</th>
-                <th>Size</th>
-                <th>Extension</th>
-                <th>Send-to-kindle</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for book in books %}
-            <tr>
-                <td>{{ book.Author }}</td>
-                <td>{{ book.Title }}</td>
-                <td>{{ book.Publisher }}</td>
-                <td>{{ book.Year }}</td>
-                <td>{{ book.Pages }}</td>
-                <td>{{ book.Language }}</td>
-                <td>{{ book.Size }}</td>
-                <td>{{ book.Extension }}</td>
-                <td>
-                    <button type="button" class="btn btn-primary send-button" data-toggle="modal" data-target="#emailModal">Send</button>
-                </td>
-                <!-- Hidden form inside modal -->
-                <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="book_to_download" value="{{ book }}">
-                    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="emailModalLabel">Enter Email Address</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <label for="emailInput">Email address:</label>
-                                    <input type="email" id="emailInput" name="kindle_email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
-                                    <div class="invalid-feedback">
-                                        Please enter a valid email address.
+    <div class="results">
+        <table>
+            <thead>
+                <tr>
+                    <th>Author</th>
+                    <th>Title</th>
+                    <th>Publisher</th>
+                    <th>Year</th>
+                    <th>Pages</th>
+                    <th>Language</th>
+                    <th>Size</th>
+                    <th>Extension</th>
+                    <th>Send-to-kindle</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.Author }}</td>
+                    <td>{{ book.Title }}</td>
+                    <td>{{ book.Publisher }}</td>
+                    <td>{{ book.Year }}</td>
+                    <td>{{ book.Pages }}</td>
+                    <td>{{ book.Language }}</td>
+                    <td>{{ book.Size }}</td>
+                    <td>{{ book.Extension }}</td>
+                    <td class="table-button">
+                        <button type="button" class="btn btn-primary send-button" data-toggle="modal" data-target="#emailModal">
+                            <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
+                        </button>
+                    </td>
+                    <!-- Hidden form inside modal -->
+                    <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="book_to_download" value="{{ book }}">
+                        <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="emailModalLabel">Enter Email Address</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Send</button>
+                                    <div class="modal-body">
+                                        <label for="emailInput">Email address:</label>
+                                        <input type="email" id="emailInput" name="kindle_email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                                        <div class="invalid-feedback">
+                                            Please enter a valid email address.
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Send</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div class="loading-overlay">
         <div class="loading-spinner"></div>
     </div>
-
+    <div class="footer">
+        <p>LibgenEmailer © 2023</p>
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -132,6 +139,27 @@
                         swal("Error!", "An error occurred.", "error");
                     },
                 });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputFields = document.querySelectorAll('.input-container input');
+
+            function handleInputFocus() {
+                const label = this.previousElementSibling;
+                label.classList.add('active');
+            }
+
+            function handleInputBlur() {
+                const label = this.previousElementSibling;
+                if (this.value === '') {
+                    label.classList.remove('active');
+                }
+            }
+
+            inputFields.forEach(function(input) {
+                input.addEventListener('focus', handleInputFocus);
+                input.addEventListener('blur', handleInputBlur);
             });
         });
     </script>
