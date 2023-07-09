@@ -7,6 +7,7 @@
     <title>LibgenEmailer</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/sweetalert/dist/sweetalert.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'emailer/style.css' %}">
 </head>
 <body>
@@ -16,9 +17,20 @@
     <main>
         <div class="form">
             <form id="findingForm" action="{% url 'index' %}" method="GET" onsubmit="return validateForm()">
-                <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required">
-                <input type="text" id="authorInput" name="author" placeholder="Author">
-                <input type="text" id="extensionInput" name="extension" placeholder="Extension">
+                <div class="input-icon">
+                    <i class="fas fa-book"></i>
+                    <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required">
+                </div>
+                    
+                <div class="input-icon">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="authorInput" name="author" placeholder="Author">
+                </div>
+                    
+                <div class="input-icon">
+                    <i class="fa-solid fa-file"></i>
+                    <input type="text" id="extensionInput" name="extension" placeholder="Extension">
+                </div>                  
                 <!-- <label for="extensionInput">Extension:</label> -->
                 <!-- <select id="extensionInput" name="extension">
                     <option value="">None</option>
@@ -48,7 +60,7 @@
                         <th>Language</th>
                         <th>Size</th>
                         <th>Extension</th>
-                        <th>Send-to-kindle</th>
+                        <th>Send!</th>
                     </tr>
                 </thead>
                 <tbody>
