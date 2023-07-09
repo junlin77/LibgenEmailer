@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LibgenEmailer</title>
+    <link rel="icon" href="{% static 'images/title.png' %}" alt="icon created by freepik" type="image/icon type">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/sweetalert/dist/sweetalert.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'emailer/style.css' %}">
 </head>
-<body>
+<body class="lightmode">
     <div class="header">LibgenEmailer
         <p>Email books from Libgen to your Kindle!</p>
     </div>
@@ -113,7 +114,7 @@
         </div>
         <div class="loading-overlay">
             <div class="loading-spinner"></div>
-        </div>
+        </div>                  
     </main>
     <div class="footer">
         <p>LibgenEmailer © 2023</p>
@@ -156,6 +157,10 @@
                 });
             });
         });
+
+        $('#toggleButton').on('click', function() {
+            $('body').toggleClass('light-mode');
+            });
     </script>
 </body>
 </html>
