@@ -78,8 +78,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <label for="emailInput">Email address:</label>
-                                        <input type="email" id="emailInput" name="kindle_email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                                        <input type="email" id="emailInput" name="kindle_email" placeholder="email address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
                                         <div class="invalid-feedback">
                                             Please enter a valid email address.
                                         </div>
@@ -139,27 +138,6 @@
                         swal("Error!", "An error occurred.", "error");
                     },
                 });
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputFields = document.querySelectorAll('.input-container input');
-
-            function handleInputFocus() {
-                const label = this.previousElementSibling;
-                label.classList.add('active');
-            }
-
-            function handleInputBlur() {
-                const label = this.previousElementSibling;
-                if (this.value === '') {
-                    label.classList.remove('active');
-                }
-            }
-
-            inputFields.forEach(function(input) {
-                input.addEventListener('focus', handleInputFocus);
-                input.addEventListener('blur', handleInputBlur);
             });
         });
     </script>
