@@ -85,6 +85,10 @@ input {
     border-radius: 5px;
 }
 
+#titleInput, #authorInput, #extensionInput {
+    color: #fff;
+}
+
 .input-icon {
     position: relative;
   }
