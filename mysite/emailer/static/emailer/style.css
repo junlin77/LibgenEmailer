@@ -16,7 +16,8 @@ body.light-mode .results th,
 body.light-mode #findingForm,
 body.light-mode .input-icon, 
 body.light-mode .input-icon input::placeholder,
-body.light-mode .footer {
+body.light-mode .footer,
+body.light-mode .footer-credits a {
     color: #000;
 }
 
@@ -169,7 +170,5 @@ th, td {
     align-items: center;
     flex-direction: column;
 }
-/* .footer-credits {
-    display: flex;
-    flex-direction: column;
-} */
+
+
