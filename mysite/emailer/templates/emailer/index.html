@@ -42,7 +42,7 @@
                 </div>   
                 <div class="input-icon">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="text" id="emailInput" name="kindle_email" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                    <input type="text" id="emailInput" name="kindle_email" placeholder="Email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Enter a valid email address">
                 </div>            
                 <button type="submit">Search</button>
             </form>
@@ -87,13 +87,16 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-        <div class="loading-overlay">
-            <div class="loading-spinner"></div>
-        </div>                  
+        </div>                 
     </main>
     <div class="footer">
-        <p>LibgenEmailer © 2023</p>
+        <div class="footer-content">
+            <p>LibgenEmailer © 2023</p>
+            <div class="footer-credits">
+                <a href="https://www.flaticon.com/free-icons/day-mode" title="day mode icons">Day mode icons created by bsd - Flaticon</a>
+                <a href="https://www.flaticon.com/free-icons/dark-mode" title="dark mode icons">Dark mode icons created by bsd - Flaticon</a>
+            </div>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -123,6 +126,8 @@
                     success: function(response) {
                         if (response.success) {
                             swal("Success!", "Email sent successfully.", "success");
+                        } else if (response == "Invalid email address.") {
+                            swal("Error!", "Please input correct email format.", "error");
                         } else {
                             swal("Error!", "Failed to send the email.", "error");
                         }
@@ -143,7 +148,6 @@
             if (preferredMode === null) {
                 preferredMode = 'dark';
             }
-
             // Set the body class based on the preferred mode
             $('body').addClass(preferredMode + '-mode');
 
