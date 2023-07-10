@@ -28,18 +28,22 @@ def index(request):
         author_filters = {"Extension": extension}
         results = s.search_author_filtered(author, author_filters, exact_match=False)
 
-    books = {"books": results}
-    return render(request, "emailer/index.html", books)
+    stored_kindle_email = request.session.get("kindle_email")
+    context = {
+        "books": results,
+        "stored_kindle_email": stored_kindle_email
+    }
+    return render(request, "emailer/index.html", context)
 
 def send_to_kindle(request):
     if request.method == "POST":
-        item_to_download = request.POST.get("book_to_download")
-        item_to_download = ast.literal_eval(item_to_download) # convert string to dict
+        item_to_download = ast.literal_eval(request.POST.get("book_to_download")) # convert string to dict
         kindle_email = request.POST.get("kindle_email")
-        print(kindle_email)
+        print(f"Kindle email: {kindle_email}")
 
         # Server-side email validation
         if not validate_email(kindle_email):
+            print("Invalid email address.")
             return HttpResponse("Invalid email address.")
 
         # resolve_download_links()

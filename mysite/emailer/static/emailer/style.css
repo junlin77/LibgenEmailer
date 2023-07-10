@@ -54,7 +54,6 @@ body.light-mode .input-icon input {
 }
 
 .header-text h5 {
-    font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: large;
 }
@@ -85,7 +84,7 @@ input {
     border-radius: 5px;
 }
 
-#titleInput, #authorInput, #extensionInput {
+#titleInput, #authorInput, #extensionInput, #emailInput {
     color: #fff;
 }
 
@@ -122,10 +121,10 @@ input {
     background-color: rgb(255, 255, 255, 0.2);
 }
 
-#emailInput::placeholder {
+/* #emailInput::placeholder {
     color: white;
-    opacity: 1; /* Firefox */
-}
+    opacity: 1; 
+} */
 
 button.btn-primary.send-button {
     background-color: transparent;

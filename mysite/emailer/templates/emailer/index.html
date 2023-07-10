@@ -36,11 +36,14 @@
                     <i class="fa-solid fa-user"></i>
                     <input type="text" id="authorInput" name="author" placeholder="Author">
                 </div>
-                    
                 <div class="input-icon">
                     <i class="fa-solid fa-file"></i>
                     <input type="text" id="extensionInput" name="extension" placeholder="Extension">
-                </div>                  
+                </div>   
+                <div class="input-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" id="emailInput" name="kindle_email" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                </div>            
                 <button type="submit">Search</button>
             </form>
         </div>
@@ -71,37 +74,15 @@
                         <td>{{ book.Size }}</td>
                         <td>{{ book.Extension }}</td>
                         <td class="table-button">
-                            <button type="button" class="btn btn-primary send-button" data-toggle="modal" data-target="#emailModal">
-                                <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
-                            </button>
+                            <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="book_to_download" value="{{ book }}">
+                                <input type="hidden" name="kindle_email" id="kindleEmailInput" value="{{ storedKindleEmail }}">
+                                <button type="submit" class="btn btn-primary send-button">
+                                    <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
+                                </button>
+                            </form>
                         </td>
-                        <!-- Hidden form inside modal -->
-                        <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="book_to_download" value="{{ book }}">
-                            <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="emailModalLabel">Enter Email Address</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <input type="email" id="emailInput" name="kindle_email" placeholder="email address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
-                                            <div class="invalid-feedback">
-                                                Please enter a valid email address.
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Send</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -153,6 +134,7 @@
             });
         });
 
+        // Lightmode Toggle Function
         $(document).ready(function() {
             // Check if the preferred mode is stored in localStorage
             var preferredMode = localStorage.getItem('preferredMode');
@@ -191,6 +173,28 @@
             // Trigger the toggle button click event to apply the initial mode
             $('#toggleButton').trigger('change');
         });
+
+        // Email Input Function
+        // Check if the email is already stored in local storage
+        var storedKindleEmail = localStorage.getItem('kindle_email');
+        
+        // If not stored, get the initial value from the Django context
+        if (!storedKindleEmail) {
+            storedKindleEmail = '{{ stored_kindle_email }}';
+        }
+        // Set the initial value of the email input
+        document.getElementById('emailInput').value = storedKindleEmail;
+        // document.querySelector('input[name="kindle_email"]').value = storedKindleEmail;
+
+        // Store the email value in local storage on input change
+        document.getElementById('emailInput').addEventListener('input', function() {
+            var email = this.value;
+            localStorage.setItem('kindle_email', email);
+        });
+
+        // Set the sending form email input value
+        var storedKindleEmail = localStorage.getItem('kindle_email');
+        document.querySelector('input[id="kindleEmailInput"]').value = storedKindleEmail;
     </script>
 </body>
 </html>
