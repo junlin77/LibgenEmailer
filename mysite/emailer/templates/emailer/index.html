@@ -30,19 +30,19 @@
             <form id="findingForm" action="{% url 'index' %}" method="GET" onsubmit="return validateForm()">
                 <div class="input-icon">
                     <i class="fas fa-book"></i>
-                    <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required">
+                    <input type="text" id="titleInput" name="title" placeholder="Title" value="{{ request.GET.title }}" pattern=".{3,}" title="Minimum 3 characters required">
                 </div>
                 <div class="input-icon">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" id="authorInput" name="author" placeholder="Author">
+                    <input type="text" id="authorInput" name="author" placeholder="Author" value="{{ request.GET.author }}">
                 </div>
                 <div class="input-icon">
                     <i class="fa-solid fa-file"></i>
-                    <input type="text" id="extensionInput" name="extension" placeholder="Extension">
+                    <input type="text" id="extensionInput" name="extension" placeholder="Extension" value="{{ request.GET.extension }}">
                 </div>   
                 <div class="input-icon">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="text" id="emailInput" name="kindle_email" placeholder="Email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Enter a valid email address">
+                    <input type="text" id="emailInput" name="email" placeholder="Email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Enter a valid email address">
                 </div>            
                 <button type="submit">Search</button>
             </form>
@@ -77,7 +77,7 @@
                             <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="book_to_download" value="{{ book }}">
-                                <input type="hidden" name="kindle_email" id="kindleEmailInput" value="{{ storedKindleEmail }}">
+                                <input type="hidden" name="kindle_email" id="kindleEmailInput">
                                 <button type="submit" class="btn btn-primary send-button">
                                     <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
                                 </button>
@@ -105,13 +105,17 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/htmx.min.js' %}" defer></script>
     <script>
         function validateForm() {
             var titleInput = document.getElementById("titleInput");
             var authorInput = document.getElementById("authorInput");
 
-            if (titleInput.value.trim() === "" && authorInput.value.trim() === "") {
+            if (titleInput.value.trim() === "" && authorInput.value.trim() === "" && emailInput.value.trim() === "") {
                 alert("Please enter either the title or author.");
+                return false;
+            } else if (titleInput.value.trim() === "" && authorInput.value.trim() === "" && emailInput.value.trim() != "") {
+                alert("Email updated successfully.")
                 return false;
             }
 
@@ -205,7 +209,7 @@
         }
         // Set the initial value of the email input
         document.getElementById('emailInput').value = storedKindleEmail;
-        // document.querySelector('input[name="kindle_email"]').value = storedKindleEmail;
+        document.querySelector('input[name="kindle_email"]').value = storedKindleEmail;
 
         // Store the email value in local storage on input change
         document.getElementById('emailInput').addEventListener('input', function() {
@@ -214,8 +218,8 @@
         });
 
         // Set the sending form email input value
-        var storedKindleEmail = localStorage.getItem('kindle_email');
-        document.querySelector('input[id="kindleEmailInput"]').value = storedKindleEmail;
+        // var storedKindleEmail = localStorage.getItem('kindle_email');
+        // document.querySelector('input[id="kindleEmailInput"]').value = storedKindleEmail;
     </script>
 </body>
 </html>
