@@ -17,7 +17,11 @@ body.light-mode #findingForm,
 body.light-mode .input-icon, 
 body.light-mode .input-icon input::placeholder,
 body.light-mode .footer,
-body.light-mode .footer-credits a {
+body.light-mode .footer-credits a,
+body.light-mode #titleInput, 
+body.light-mode #authorInput, 
+body.light-mode #extensionInput, 
+body.light-mode #emailInput {
     color: #000;
 }
 
