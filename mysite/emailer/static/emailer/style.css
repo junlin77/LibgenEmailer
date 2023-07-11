@@ -178,14 +178,20 @@ th, td {
     position: relative;
 }
 
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .loader {
     display: none;
     position: relative;
-    width: 30px;
-    height: 30px;
+    width: 15px;
+    height: 15px;
     border-style: solid;
     box-sizing: border-box;
-    border-width: 24px 36px 18px 36px;
+    border-width: 12px 18px 9px 18px;
     border-color: #3760C9 #96DDFC #96DDFC #36BBF7;
     animation: envFloating 1s ease-in infinite alternate;
 }
@@ -193,49 +199,51 @@ th, td {
 .loader:after {
     content: "";
     position: absolute;
-    right: 42px;
-    top: -24px;
-    height: 42px;
-    width: 30px;
-    background-image: linear-gradient(#fff 27px, transparent 0),
-        linear-gradient(#fff 27px, transparent 0),
-        linear-gradient(#fff 27px, transparent 0);
+    right: 21px;
+    top: -12px;
+    height: 21px;
+    width: 15px;
+    background-image: linear-gradient(#fff 13.5px, transparent 0),
+        linear-gradient(#fff 13.5px, transparent 0),
+        linear-gradient(#fff 13.5px, transparent 0);
     background-repeat: no-repeat;
-    background-size: 18px 2.4px;
-    background-position: 0px 6px, 4.8px 18px, 0px 30px;
+    background-size: 9px 1.2px;
+    background-position: 0px 3px, 2.4px 9px, 0px 15px;
     animation: envDropping 0.75s linear infinite;
 }
 
 body.light-mode .loader:after {
-    background-image: linear-gradient(#000 27px, transparent 0),
-        linear-gradient(#000 27px, transparent 0),
-        linear-gradient(#000 27px, transparent 0);
+    background-image: linear-gradient(#000 13.5px, transparent 0),
+        linear-gradient(#000 13.5px, transparent 0),
+        linear-gradient(#000 13.5px, transparent 0);
 }
 
 @keyframes envFloating {
     0% {
-        transform: translate(-1.2px, -3px);
+        transform: translate(-0.6px, -1.5px);
     }
     100% {
-        transform: translate(0, 3px);
+        transform: translate(0, 1.5px);
     }
 }
 
 @keyframes envDropping {
     0% {
-        background-position: 60px 6px, 69px 18px, 63px 30px;
+        background-position: 30px 3px, 34.8px 9px, 31.5px 15px;
         opacity: 1;
     }
     50% {
-        background-position: 0px 6px, 7.2px 18px, 1.8px 30px;
+        background-position: 0px 3px, 3.6px 9px, 0.9px 15px;
     }
     60% {
-        background-position: -18px 6px, 0px 18px, -4.8px 30px;
+        background-position: -9px 3px, 0px 9px, -2.4px 15px;
     }
     75%,
     100% {
-        background-position: -18px 6px, -18px 18px, -18px 30px;
+        background-position: -9px 3px, -9px 9px, -9px 15px;
         opacity: 0;
     }
 }
+
+
 
