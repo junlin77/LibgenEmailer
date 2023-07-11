@@ -28,7 +28,11 @@ def partial_search(request):
         # elif len(title) < 3 and author != "" and extension != "": # filtered author search
         #     author_filters = {"Extension": extension}
         #     results = s.search_author_filtered(author, author_filters, exact_match=False)
-        results = s.search_title(title)
+        if author == None and extension == None:
+            author = ""
+            extension = ""
+            
+        results = s.search_title_filtered(title, {"Author": author, "Extension": extension}, exact_match=False)
         stored_kindle_email = request.session.get("kindle_email")
         context = {
             "books": results,

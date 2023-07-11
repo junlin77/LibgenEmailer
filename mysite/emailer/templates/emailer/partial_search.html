@@ -8,14 +8,38 @@
 </head>
 <body>
     <main>
-        <input type="text" id="titleInput" name="title" 
-                                placeholder="Title" 
-                                value="{{ request.GET.title }}" 
-                                pattern=".{3,}" 
-                                title="Minimum 3 characters required"
-                                hx-get="{% url 'partial_search' %}"
-                                hx-target="#results"
-                                hx-trigger="input delay:0.2s">
+        <div class="form">
+            <!-- <form id="findingForm" action="{% url 'search' %}" method="GET" onsubmit="return validateForm()"> -->
+                <!-- <div class="input-icon">
+                    <i class="fas fa-book"></i>
+                    <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required" hx-get="{% url 'partial_search' %}"
+                    hx-target="#results"
+                    hx-trigger="input delay:0.0s">
+                </div>
+                <div class="input-icon">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="authorInput" name="author" placeholder="Author" hx-get="{% url 'partial_search' %}"
+                    hx-target="#results"
+                    hx-trigger="input delay:0.0s">
+                </div>
+                <div class="input-icon">
+                    <i class="fa-solid fa-file"></i>
+                    <input type="text" id="extensionInput" name="extension" placeholder="Extension" hx-get="{% url 'partial_search' %}"
+                    hx-target="#results"
+                    hx-trigger="input delay:0.0s">
+                </div>   
+                <div class="input-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" id="emailInput" name="email" placeholder="Email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Enter a valid email address">
+                </div>             -->
+            <!-- </form> -->
+            <form hx-get="{% url 'partial_search' %}" hx-target="#results" hx-trigger="input delay:0.0s"> 
+                <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required">
+                <input type="text" id="authorInput" name="author" placeholder="Author" value="{{ request.GET.author }}">
+                <input type="text" id="extensionInput" name="extension" placeholder="Extension" value="{{ request.GET.extension }}">
+                <input type="text" id="emailInput" name="email" placeholder="Email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Enter a valid email address">
+            </form>
+        </div>
         <section id="results">
             <div class="results">
                 {% include 'emailer/partial_results.html' %}
