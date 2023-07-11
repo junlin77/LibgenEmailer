@@ -81,7 +81,8 @@
                                 <button type="submit" class="btn btn-primary send-button">
                                     <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
                                 </button>
-                            </form>
+                                <span class="loader"></span>
+                            </form>                                                      
                         </td>
                     </tr>
                     {% endfor %}
@@ -94,6 +95,7 @@
             <p>LibgenEmailer © 2023</p>
             <div class="footer-credits">
                 <a href="https://www.flaticon.com/free-icons/day-mode" title="day mode icons">Day mode icons created by bsd - Flaticon</a>
+                &middot;
                 <a href="https://www.flaticon.com/free-icons/dark-mode" title="dark mode icons">Dark mode icons created by bsd - Flaticon</a>
             </div>
         </div>
@@ -118,6 +120,13 @@
             $('.sending-form').submit(function(e) {
                 e.preventDefault(); // Prevent form submission
                 var form = $(this);
+                var button = form.find('.send-button');
+                var loader = form.find('.loader');
+
+                // Disable the button and show the loader
+                button.attr("disabled", true);
+                loader.show();
+                button.hide();
 
                 $.ajax({
                     url: form.attr('action'),
@@ -135,6 +144,12 @@
                     error: function() {
                         swal("Error!", "An error occurred.", "error");
                     },
+                    complete: function() {
+                        // Re-enable the button and hide the loader whether success or failure
+                        button.attr("disabled", false);
+                        loader.hide();
+                        button.show();
+                    }
                 });
             });
         });

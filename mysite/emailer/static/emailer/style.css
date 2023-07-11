@@ -171,4 +171,71 @@ th, td {
     flex-direction: column;
 }
 
+.button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.loader {
+    display: none;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-style: solid;
+    box-sizing: border-box;
+    border-width: 24px 36px 18px 36px;
+    border-color: #3760C9 #96DDFC #96DDFC #36BBF7;
+    animation: envFloating 1s ease-in infinite alternate;
+}
+
+.loader:after {
+    content: "";
+    position: absolute;
+    right: 42px;
+    top: -24px;
+    height: 42px;
+    width: 30px;
+    background-image: linear-gradient(#fff 27px, transparent 0),
+        linear-gradient(#fff 27px, transparent 0),
+        linear-gradient(#fff 27px, transparent 0);
+    background-repeat: no-repeat;
+    background-size: 18px 2.4px;
+    background-position: 0px 6px, 4.8px 18px, 0px 30px;
+    animation: envDropping 0.75s linear infinite;
+}
+
+body.light-mode .loader:after {
+    background-image: linear-gradient(#000 27px, transparent 0),
+        linear-gradient(#000 27px, transparent 0),
+        linear-gradient(#000 27px, transparent 0);
+}
+
+@keyframes envFloating {
+    0% {
+        transform: translate(-1.2px, -3px);
+    }
+    100% {
+        transform: translate(0, 3px);
+    }
+}
+
+@keyframes envDropping {
+    0% {
+        background-position: 60px 6px, 69px 18px, 63px 30px;
+        opacity: 1;
+    }
+    50% {
+        background-position: 0px 6px, 7.2px 18px, 1.8px 30px;
+    }
+    60% {
+        background-position: -18px 6px, 0px 18px, -4.8px 30px;
+    }
+    75%,
+    100% {
+        background-position: -18px 6px, -18px 18px, -18px 30px;
+        opacity: 0;
+    }
+}
 
