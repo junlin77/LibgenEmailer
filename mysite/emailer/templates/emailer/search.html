@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LibgenEmailer</title>
+    <link rel="icon" href="{% static 'images/title.png' %}" alt="icon created by freepik" type="image/icon type">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/sweetalert/dist/sweetalert.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'emailer/style.css' %}">
+</head>
+<body class="light-mode">
+    <div class="header light-mode">
+        <div class="header-text">
+            <h5>LibgenEmailer</h5>
+            <p>Email books from Libgen to your Kindle!</p>
+        </div>
+        <div class="toggle-container">
+            <input type="checkbox" id="toggleButton" class="toggle-input">
+            <label for="toggleButton" class="toggle-label">
+                <img src="{% static 'images/dark.png' %}" alt="Light Mode" class="light-mode-icon">
+                <img src="{% static 'images/light.png' %}" alt="Dark Mode" class="dark-mode-icon">
+            </label>
+        </div>                   
+    </div>
+    <main>
+        <div class="form">
+            <form id="findingForm" action="{% url 'search' %}" method="GET" onsubmit="return validateForm()">
+                <div class="input-icon">
+                    <i class="fas fa-book"></i>
+                    <input type="text" id="titleInput" name="title" placeholder="Title" value="{{ request.GET.title }}" pattern=".{3,}" title="Minimum 3 characters required">
+                </div>
+                <div class="input-icon">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="authorInput" name="author" placeholder="Author" value="{{ request.GET.author }}">
+                </div>
+                <div class="input-icon">
+                    <i class="fa-solid fa-file"></i>
+                    <input type="text" id="extensionInput" name="extension" placeholder="Extension" value="{{ request.GET.extension }}">
+                </div>   
+                <div class="input-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" id="emailInput" name="email" placeholder="Email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Enter a valid email address">
+                </div>            
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="results">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Author</th>
+                        <th>Title</th>
+                        <th>Publisher</th>
+                        <th>Year</th>
+                        <th>Pages</th>
+                        <th>Language</th>
+                        <th>Size</th>
+                        <th>Extension</th>
+                        <th>Send!</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td>{{ book.Author }}</td>
+                        <td>{{ book.Title }}</td>
+                        <td>{{ book.Publisher }}</td>
+                        <td>{{ book.Year }}</td>
+                        <td>{{ book.Pages }}</td>
+                        <td>{{ book.Language }}</td>
+                        <td>{{ book.Size }}</td>
+                        <td>{{ book.Extension }}</td>
+                        <td class="table-button">
+                            <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="book_to_download" value="{{ book }}">
+                                <input type="hidden" name="kindle_email" id="kindleEmailInput">
+                                <button type="submit" class="btn btn-primary send-button">
+                                    <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
+                                </button>
+                                <div class="loader-container">
+                                    <span class="loader"></span>
+                                </div>
+                            </form>                                                      
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>                 
+    </main>
+    <div class="footer">
+        <div class="footer-content">
+            <p>LibgenEmailer © 2023</p>
+            <div class="footer-credits">
+                <a href="https://www.flaticon.com/free-icons/day-mode" title="day mode icons">Day mode icons created by bsd - Flaticon</a>
+                &middot;
+                <a href="https://www.flaticon.com/free-icons/dark-mode" title="dark mode icons">Dark mode icons created by bsd - Flaticon</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/htmx.min.js' %}" defer></script>
+    <script>
+        function validateForm() {
+            var titleInput = document.getElementById("titleInput");
+            var authorInput = document.getElementById("authorInput");
+
+            if (titleInput.value.trim() === "" && authorInput.value.trim() === "" && emailInput.value.trim() === "") {
+                alert("Please enter either the title or author.");
+                return false;
+            } else if (titleInput.value.trim() === "" && authorInput.value.trim() === "" && emailInput.value.trim() != "") {
+                alert("Email updated successfully.")
+                return false;
+            }
+
+            return true;
+        }
+
+        $(document).ready(function() {
+            $('.sending-form').submit(function(e) {
+                e.preventDefault(); // Prevent form submission
+                var form = $(this);
+                var button = form.find('.send-button');
+                var loader = form.find('.loader');
+
+                // Disable the button and show the loader
+                button.attr("disabled", true);
+                loader.show();
+                button.hide();
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            swal("Success!", "Email sent successfully.", "success");
+                        } else if (response == "Invalid email address.") {
+                            swal("Error!", "Please input correct email format.", "error");
+                        } else {
+                            swal("Error!", "Failed to send the email.", "error");
+                        }
+                    },
+                    error: function() {
+                        swal("Error!", "An error occurred.", "error");
+                    },
+                    complete: function() {
+                        // Re-enable the button and hide the loader whether success or failure
+                        button.attr("disabled", false);
+                        loader.hide();
+                        button.show();
+                    }
+                });
+            });
+        });
+
+        // Lightmode Toggle Function
+        $(document).ready(function() {
+            // Check if the preferred mode is stored in localStorage
+            var preferredMode = localStorage.getItem('preferredMode');
+
+            // If no preferred mode is stored, default to dark mode
+            if (preferredMode === null) {
+                preferredMode = 'dark';
+            }
+            // Set the body class based on the preferred mode
+            $('body').addClass(preferredMode + '-mode');
+
+            // Update the toggle button state based on the preferred mode
+            $('#toggleButton').prop('checked', preferredMode === 'light');
+
+            // Function to handle toggle button change
+            function handleToggleButton() {
+                var isLightMode = $(this).is(':checked');
+
+                // Update the body class and preferred mode based on the toggle button state
+                if (isLightMode) {
+                    $('body').removeClass('dark-mode').addClass('light-mode');
+                    localStorage.setItem('preferredMode', 'light');
+                    $('.dark-mode-icon').hide();
+                    $('.light-mode-icon').show();
+                } else {
+                    $('body').removeClass('light-mode').addClass('dark-mode');
+                    localStorage.setItem('preferredMode', 'dark');
+                    $('.light-mode-icon').hide();
+                    $('.dark-mode-icon').show();
+                }
+            }
+            // Attach the handleToggleButton function to the toggle button change event
+            $('#toggleButton').on('change', handleToggleButton);
+
+            // Trigger the toggle button click event to apply the initial mode
+            $('#toggleButton').trigger('change');
+        });
+
+        // Email Input Function
+        // Check if the email is already stored in local storage
+        var storedKindleEmail = localStorage.getItem('kindle_email');
+        
+        // If not stored, get the initial value from the Django context
+        if (!storedKindleEmail) {
+            storedKindleEmail = '{{ stored_kindle_email }}';
+        }
+        // Set the initial value of the email input
+        document.getElementById('emailInput').value = storedKindleEmail;
+        document.querySelector('input[name="kindle_email"]').value = storedKindleEmail;
+
+        // Store the email value in local storage on input change
+        document.getElementById('emailInput').addEventListener('input', function() {
+            var email = this.value;
+            localStorage.setItem('kindle_email', email);
+        });
+
+        // Set the sending form email input value
+        // var storedKindleEmail = localStorage.getItem('kindle_email');
+        // document.querySelector('input[id="kindleEmailInput"]').value = storedKindleEmail;
+    </script>
+</body>
+</html>

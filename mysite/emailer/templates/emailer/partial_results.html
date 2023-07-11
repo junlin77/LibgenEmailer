@@ -1,0 +1,46 @@
+<!-- partial_results.html -->
+{% load static %}
+<div class="results">
+    <table>
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Title</th>
+                <th>Publisher</th>
+                <th>Year</th>
+                <th>Pages</th>
+                <th>Language</th>
+                <th>Size</th>
+                <th>Extension</th>
+                <th>Send!</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.Author }}</td>
+                <td>{{ book.Title }}</td>
+                <td>{{ book.Publisher }}</td>
+                <td>{{ book.Year }}</td>
+                <td>{{ book.Pages }}</td>
+                <td>{{ book.Language }}</td>
+                <td>{{ book.Size }}</td>
+                <td>{{ book.Extension }}</td>
+                <td class="table-button">
+                    <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="book_to_download" value="{{ book }}">
+                        <input type="hidden" name="kindle_email" id="kindleEmailInput">
+                        <button type="submit" class="btn btn-primary send-button">
+                            <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
+                        </button>
+                        <div class="loader-container">
+                            <span class="loader"></span>
+                        </div>
+                    </form>                                                      
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>                 

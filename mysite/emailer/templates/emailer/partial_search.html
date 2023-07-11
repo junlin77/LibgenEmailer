@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        <input type="text" id="titleInput" name="title" 
+                                placeholder="Title" 
+                                value="{{ request.GET.title }}" 
+                                pattern=".{3,}" 
+                                title="Minimum 3 characters required"
+                                hx-get="{% url 'partial_search' %}"
+                                hx-target="#results"
+                                hx-trigger="input delay:0.2s">
+        <section id="results">
+            <div class="results">
+                {% include 'emailer/partial_results.html' %}
+            </div>
+        </section>
+    </main>
+    <script type="text/javascript" src="{% static 'js/htmx.min.js' %}" defer></script>
+</body>
+</html>
