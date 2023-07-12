@@ -30,6 +30,7 @@ def partial_search(request):
             results = s.search_author_filtered(author, author_filters, exact_match=False)
 
         stored_kindle_email = request.session.get("kindle_email")
+
         context = {
             "books": results,
             "stored_kindle_email": stored_kindle_email
