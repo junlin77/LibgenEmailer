@@ -81,44 +81,6 @@
             return true;
         }
 
-        $(document).ready(function() {
-            $('.sending-form').submit(function(e) {
-                e.preventDefault(); // Prevent form submission
-                var form = $(this);
-                var button = form.find('.send-button');
-                var loader = form.find('.loader');
-
-                // Disable the button and show the loader
-                button.attr("disabled", true);
-                loader.show();
-                button.hide();
-
-                $.ajax({
-                    url: form.attr('action'),
-                    type: form.attr('method'),
-                    data: form.serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            swal("Success!", "Email sent successfully.", "success");
-                        } else if (response == "Invalid email address.") {
-                            swal("Error!", "Please input correct email format.", "error");
-                        } else {
-                            swal("Error!", "Failed to send the email.", "error");
-                        }
-                    },
-                    error: function() {
-                        swal("Error!", "An error occurred.", "error");
-                    },
-                    complete: function() {
-                        // Re-enable the button and hide the loader whether success or failure
-                        button.attr("disabled", false);
-                        loader.hide();
-                        button.show();
-                    }
-                });
-            });
-        });
-
         // Lightmode Toggle Function
         $(document).ready(function() {
             // Check if the preferred mode is stored in localStorage
