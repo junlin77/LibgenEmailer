@@ -62,11 +62,12 @@
                     data: form.serialize(),
                     success: function(response) {
                         if (response.success) {
-                            swal("Success!", "Email sent successfully.", "success");
+                            var email = form.find('#kindleEmailInput').val();
+                            swal("Success!", "Sent successfully to: " + email, "success");
                         } else if (response == "Invalid email address.") {
                             swal("Error!", "Please input correct email format.", "error");
                         } else {
-                            swal("Error!", "Failed to send the email.", "error");
+                            swal("Oops!", "There's been an error :(", "error");
                         }
                     },
                     error: function() {
