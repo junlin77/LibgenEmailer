@@ -84,5 +84,9 @@
 
         // Set the sending form email input value
         var storedKindleEmail = localStorage.getItem('kindle_email');
-        document.querySelector('input[id="kindleEmailInput"]').value = storedKindleEmail;
+        var kindleEmailInputs = document.querySelectorAll('input[id="kindleEmailInput"]');
+        
+        kindleEmailInputs.forEach(function(input) {
+            input.value = storedKindleEmail;
+        });
 </script>        
