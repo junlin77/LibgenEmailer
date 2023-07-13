@@ -296,10 +296,6 @@ body.light-mode .loader:after {
         flex-direction: column;
     }
 
-    th, tr {
-        font-size: small;
-    }
-
     .modal {
         display: none;
         position: fixed;
