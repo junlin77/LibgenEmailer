@@ -42,7 +42,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <table class="mobile">
+    <!-- <table class="mobile">
         <thead>
             <tr>
                 <th>Author</th>
@@ -75,7 +75,44 @@
                 </div>
             </form>
         </div>
+    </div> -->
+    <div class="books-container">
+        {% for book in books %}
+        <div class="book-card" onclick="displayDetails(this)">
+            <div class="book-details">
+                <h5>{{ book.Title }}</h5>
+                <p>{{ book.Author }}</p>
+                <input type="hidden" class="hidden-details" value="{{ book.Publisher }}|{{ book.Year }}|{{ book.Pages }}|{{ book.Language }}|{{ book.Size }}|{{ book.Extension }}">
+            </div>
+        </div>
+        {% endfor %}
     </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-details">
+                <h3 class="modal-title"></h3>
+                <p class="modal-author"></p>
+                <p class="modal-publisher"></p>
+                <p class="modal-year"></p>
+                <p class="modal-pages"></p>
+                <p class="modal-language"></p>
+                <p class="modal-size"></p>
+                <p class="modal-extension"></p>
+            </div>
+            <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="book_to_download">
+                <input type="hidden" name="kindle_email" id="kindleEmailInput">
+                <button type="submit" class="btn btn-primary send-button">
+                    <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
+                </button>
+                <div class="loader-container">
+                    <span class="loader"></span>
+                </div>
+            </form>
+        </div>
+    </div>    
 </div>  
 <script>
     $(document).ready(function() {
@@ -125,44 +162,81 @@
         input.value = storedKindleEmail;
     });
 
-    // Mobile table click event
-    var tableRows = document.querySelectorAll(".table-row");
-    var modal = document.getElementById("modal");
-    var modalDetails = modal.querySelector(".modal-details");
-    var closeBtn = modal.querySelector(".close");
-    var bookToDownloadInput = modal.querySelector("input[name='book_to_download']");
-    var kindleEmailInput = modal.querySelector("#kindleEmailInput");
+    // // Mobile table click event
+    // var tableRows = document.querySelectorAll(".table-row");
+    // var modal = document.getElementById("modal");
+    // var modalDetails = modal.querySelector(".modal-details");
+    // var closeBtn = modal.querySelector(".close");
+    // var bookToDownloadInput = modal.querySelector("input[name='book_to_download']");
+    // var kindleEmailInput = modal.querySelector("#kindleEmailInput");
 
-    tableRows.forEach(function(row) {
-        row.addEventListener("click", function() {
-            var hiddenDetails = row.querySelector(".hidden-details").value;
-            var detailsArray = hiddenDetails.split("|");
-            var detailsHtml = "";
+    // tableRows.forEach(function(row) {
+    //     row.addEventListener("click", function() {
+    //         var hiddenDetails = row.querySelector(".hidden-details").value;
+    //         var detailsArray = hiddenDetails.split("|");
+    //         var detailsHtml = "";
 
-            // Construct the HTML for the details
-            detailsArray.forEach(function(detail) {
-                detailsHtml += "<p>" + detail + "</p>";
-            });
+    //         // Construct the HTML for the details
+    //         detailsArray.forEach(function(detail) {
+    //             detailsHtml += "<p>" + detail + "</p>";
+    //         });
 
-            modalDetails.innerHTML = detailsHtml;
+    //         modalDetails.innerHTML = detailsHtml;
 
-            // Set the book_to_download input value to the book's hidden details
-            bookToDownloadInput.value = hiddenDetails;
+    //         // Set the book_to_download input value to the book's hidden details
+    //         bookToDownloadInput.value = hiddenDetails;
 
-            // Display the modal
-            modal.style.display = "block";
-        });
-    });
+    //         // Display the modal
+    //         modal.style.display = "block";
+    //     });
+    // });
+
+    // // Close the modal when the close button is clicked
+    // closeBtn.addEventListener("click", function() {
+    //     modal.style.display = "none";
+    // });
+
+    // // Close the modal when clicking outside the modal content
+    // window.addEventListener("click", function(event) {
+    //     if (event.target == modal) {
+    //         modal.style.display = "none";
+    //     }
+    // });
+
+
+    function displayDetails(card) {
+        var hiddenDetails = card.querySelector('.hidden-details').value.split('|');
+        var modalTitle = document.querySelector('.modal-title');
+        var modalAuthor = document.querySelector('.modal-author');
+        var modalPublisher = document.querySelector('.modal-publisher');
+        var modalYear = document.querySelector('.modal-year');
+        var modalPages = document.querySelector('.modal-pages');
+        var modalLanguage = document.querySelector('.modal-language');
+        var modalSize = document.querySelector('.modal-size');
+        var modalExtension = document.querySelector('.modal-extension');
+        var bookToDownloadInput = document.querySelector('[name="book_to_download"]');
+        var modal = document.getElementById('modal');
+
+        // Set the book details in the modal
+        modalTitle.textContent = card.querySelector('h5').textContent;
+        modalAuthor.textContent = 'Author: ' + card.querySelector('p').textContent;
+        modalPublisher.textContent = 'Publisher: ' + hiddenDetails[0];
+        modalYear.textContent = 'Year: ' + hiddenDetails[1];
+        modalPages.textContent = 'Pages: ' + hiddenDetails[2];
+        modalLanguage.textContent = 'Language: ' + hiddenDetails[3];
+        modalSize.textContent = 'Size: ' + hiddenDetails[4];
+        modalExtension.textContent = 'Extension: ' + hiddenDetails[5];
+
+        // Set the book title as the value of the book_to_download input
+        bookToDownloadInput.value = card.querySelector('h5').textContent;
+
+        // Display the modal
+        modal.style.display = 'block';
+    }
 
     // Close the modal when the close button is clicked
-    closeBtn.addEventListener("click", function() {
-        modal.style.display = "none";
-    });
-
-    // Close the modal when clicking outside the modal content
-    window.addEventListener("click", function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+    document.querySelector('.close').addEventListener('click', function() {
+        var modal = document.getElementById('modal');
+        modal.style.display = 'none';
     });
 </script>        
