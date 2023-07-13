@@ -46,40 +46,40 @@
         <div class="books-container">
             {% for book in books %}
             <div class="book-card" onclick="displayDetails(this)">
-                <div class="book-details">
-                    <h5>{{ book.Title }}</h5>
-                    <p>{{ book.Author }}</p>
+                <div class="book-details" value="{{ book }}">
+                    <h5>📖 {{ book.Title }}</h5>
+                    <p>👤 {{ book.Author }}</p>
                     <input type="hidden" class="hidden-details" value="{{ book.Publisher }}|{{ book.Year }}|{{ book.Pages }}|{{ book.Language }}|{{ book.Size }}|{{ book.Extension }}">
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div class="modal-details">
-                    <h3 class="modal-title"></h3>
-                    <p class="modal-author"></p>
-                    <p class="modal-publisher"></p>
-                    <p class="modal-year"></p>
-                    <p class="modal-pages"></p>
-                    <p class="modal-language"></p>
-                    <p class="modal-size"></p>
-                    <p class="modal-extension"></p>
-                </div>
-                <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="book_to_download">
-                    <input type="hidden" name="kindle_email" id="kindleEmailInput">
-                    <button type="submit" class="btn btn-primary send-button">
-                        <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
-                    </button>
-                    <div class="loader-container">
-                        <span class="loader"></span>
+            <div id="modal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="modal-details">
+                        <h3 class="modal-title"></h3>
+                        <p class="modal-author"></p>
+                        <p class="modal-publisher"></p>
+                        <p class="modal-year"></p>
+                        <p class="modal-pages"></p>
+                        <p class="modal-language"></p>
+                        <p class="modal-size"></p>
+                        <p class="modal-extension"></p>
                     </div>
-                </form>
-            </div>
-        </div>  
+                    <form class="sending-form" action="{% url 'send_to_kindle' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="book_to_download" value="{{ book }}">
+                        <input type="hidden" name="kindle_email" id="kindleEmailInput">
+                        <button type="submit" class="btn btn-primary send-button">
+                            <img src="{% static 'images/airplane.svg' %}" alt="Send" width="35" height="35">
+                        </button>
+                        <div class="loader-container">
+                            <span class="loader"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>  
+            {% endfor %}
+        </div>      
     </div>  
 </div>  
 <script>
@@ -145,17 +145,14 @@
         var modal = document.getElementById('modal');
 
         // Set the book details in the modal
-        modalTitle.textContent = card.querySelector('h5').textContent;
-        modalAuthor.textContent = 'Author: ' + card.querySelector('p').textContent;
+        modalTitle.textContent = card.querySelector('h5').textContent.slice(2);
+        modalAuthor.textContent = 'Author: ' + card.querySelector('p').textContent.slice(2);
         modalPublisher.textContent = 'Publisher: ' + hiddenDetails[0];
         modalYear.textContent = 'Year: ' + hiddenDetails[1];
         modalPages.textContent = 'Pages: ' + hiddenDetails[2];
         modalLanguage.textContent = 'Language: ' + hiddenDetails[3];
         modalSize.textContent = 'Size: ' + hiddenDetails[4];
         modalExtension.textContent = 'Extension: ' + hiddenDetails[5];
-
-        // Set the book title as the value of the book_to_download input
-        bookToDownloadInput.value = card.querySelector('h5').textContent;
 
         // Display the modal
         modal.style.display = 'block';
