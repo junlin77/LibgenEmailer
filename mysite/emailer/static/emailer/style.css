@@ -353,10 +353,6 @@ body.light-mode .loader:after {
         display: none;
     }
 
-    .swal {
-        max-width: 500px;
-    }
-
     .footer-credits {
         font-size: x-small;
     }
