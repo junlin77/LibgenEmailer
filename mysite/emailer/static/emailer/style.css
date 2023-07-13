@@ -359,30 +359,22 @@ body.light-mode .loader:after {
         color: #000;
     }
 
-
     .books-container {
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 10px;
     }
     
     .book-card {
-        width: 200px;
-        height: 200px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin: 10px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        outline: 2px solid transparent; /* Add this line */
+        box-shadow: 0 4px 8px 0 rgba(66, 66, 66, 0.2);
+        transition: 0.3s;
+        border-radius: 5px;
+        padding: 10px;
     }
-    
-    .book-card:focus {
-        outline-color: #3498db; /* Add this block */
-        box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-    }  
+
+    body.light-mode .book-card {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
 }
 
 
