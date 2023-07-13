@@ -331,6 +331,10 @@ body.light-mode .loader:after {
         color: #fff;
     }
 
+    .sending-form .btn {
+        float: right;
+    }
+
     .modal-details {
         margin-bottom: 20px;
     }
@@ -339,8 +343,18 @@ body.light-mode .loader:after {
         margin: 0;
     }
 
+    .modal-title {
+        font-size: medium;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
     .hidden-details {
         display: none;
+    }
+
+    .swal {
+        max-width: 500px;
     }
 
     .footer-credits {
