@@ -158,16 +158,18 @@
         modal.style.display = 'block';
     }
 
-    // Close the modal when the close button is clicked
-    document.querySelector('.close').addEventListener('click', function() {
-        var modal = document.getElementById('modal');
-        modal.style.display = 'none';
-    });
+    document.addEventListener(
+        "click",
+        function(event) {
+            // close modal when close button clicked or anywhere except send button
+            if (event.target.matches(".close") || event.target.closest(".modal") && !event.target.closest(".sending-form")) {
+                closeModal()
+            }
+        },
+        false
+    )
 
-    // Close the modal when clicking outside the modal content
-    window.addEventListener("click", function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    });
+    function closeModal() {
+        document.querySelector(".modal").style.display = "none"
+    }
 </script>        
