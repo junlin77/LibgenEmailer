@@ -41,19 +41,19 @@ body.light-mode .input-icon input {
 
 .light-mode-icon {
     display: block;
-  }
+}
   
-  .dark-mode-icon {
+.dark-mode-icon {
     display: none;
-  }
-  
-  .toggle-label {
+}
+
+.toggle-label {
     position: relative;
     display: inline-block;
     cursor: pointer;
-  }
-  
-  .toggle-label::before {
+}
+
+.toggle-label::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -64,15 +64,15 @@ body.light-mode .input-icon input {
     background-color: #aaa;
     opacity: 0;
     border-radius: 5px;
-  }
-  
-  .toggle-label:hover::before {
-    opacity: 0.1;
-  }
+}
 
-  body.light-mode .toggle-label:hover::before {
+.toggle-label:hover::before {
+    opacity: 0.1;
+}
+
+body.light-mode .toggle-label:hover::before {
     opacity: 0.2;
-  }
+}
 /* end */
 
 .header {
@@ -381,6 +381,10 @@ body.light-mode .loader:after {
 
     body.light-mode .book-card {
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+
+    .swal-wide {
+        width: 70% !important;
     }
 }
 

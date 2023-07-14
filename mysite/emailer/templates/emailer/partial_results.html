@@ -84,43 +84,65 @@
 </div>  
 <script>
     $(document).ready(function() {
-            $('.sending-form').submit(function(e) {
-                e.preventDefault(); // Prevent form submission
-                var form = $(this);
-                var button = form.find('.send-button');
-                var loader = form.find('.loader');
+        $('.sending-form').submit(function(e) {
+            e.preventDefault(); // Prevent form submission
+            var form = $(this);
+            var button = form.find('.send-button');
+            var loader = form.find('.loader');
 
-                // Disable the button and show the loader
-                button.attr("disabled", true);
-                loader.show();
-                button.hide();
+            // Disable the button and show the loader
+            button.attr("disabled", true);
+            loader.show();
+            button.hide();
 
-                $.ajax({
-                    url: form.attr('action'),
-                    type: form.attr('method'),
-                    data: form.serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            var email = form.find('#kindleEmailInput').val();
-                            swal("Success!", "Sent successfully to: " + email, "success");
-                        } else if (response == "Invalid email address.") {
-                            swal("Error!", "Please input correct email format.", "error");
-                        } else {
-                            swal("Oops!", "There's been an error :(", "error");
-                        }
-                    },
-                    error: function() {
-                        swal("Error!", "An error occurred.", "error");
-                    },
-                    complete: function() {
-                        // Re-enable the button and hide the loader whether success or failure
-                        button.attr("disabled", false);
-                        loader.hide();
-                        button.show();
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function(response) {
+                    var title, text, icon;
+
+                    if (response.success) {
+                        var email = form.find('#kindleEmailInput').val();
+                        title = "Success!";
+                        text = "Sent successfully to: " + email;
+                        icon = "success";
+                    } else if (response == "Invalid email address.") {
+                        title = "Error!";
+                        text = "Please input correct email format.";
+                        icon = "error";
+                    } else {
+                        title = "Oops!";
+                        text = "There's been an error :(";
+                        icon = "error";
                     }
-                });
+
+                    Swal.fire({
+                        title: title,
+                        text: text,
+                        icon: icon,
+                        customClass: 'swal-wide',
+                    });
+                    closeModal();
+                },
+                error: function() {
+                    Swal.fire({
+                    title: "Error!",
+                    text: "An error occurred.",
+                    icon: "error",
+                    customClass: 'swal-wide',
+                    });
+                    closeModal();
+                },
+                complete: function() {
+                    // Re-enable the button and hide the loader whether success or failure
+                    button.attr("disabled", false);
+                    loader.hide();
+                    button.show();
+                }
             });
         });
+    });
 
     // Set the sending form email input value
     var storedKindleEmail = localStorage.getItem('kindle_email');
