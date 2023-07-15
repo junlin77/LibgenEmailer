@@ -41,7 +41,7 @@
                 </div>   
                 <div class="input-icon">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="text" id="emailInput" name="email" placeholder="Email" value="{{ request.GET.email }}" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Enter a valid email address">
+                    <input type="text" id="emailInput" name="email" placeholder="Email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Enter a valid email address">
                 </div>
             </form>
         </div>
@@ -120,16 +120,11 @@
             $('#toggleButton').trigger('change');
         });
 
-        // Email Input Function
-        // Check if the email is already stored in local storage
-        var storedKindleEmail = localStorage.getItem('kindle_email');
-        
-        // If not stored, get the initial value from the Django context
-        if (!storedKindleEmail) {
-            storedKindleEmail = '{{ stored_kindle_email }}';
-        }
+        // Set email from django context in local storage
+        var email = '{{ stored_kindle_email }}';
+        localStorage.setItem('kindle_email', email);
 
-        // Store the email value in local storage on input change
+        // Reassign email in local storage when input changes
         document.getElementById('emailInput').addEventListener('input', function() {
             var email = this.value;
             localStorage.setItem('kindle_email', email);
