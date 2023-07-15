@@ -45,14 +45,14 @@
     <div class="mobile">
         <div class="books-container">
             {% for book in books %}
-            <div class="book-card" onclick="displayDetails(this)">
+            <div class="book-card" onclick="displayDetails(this, '{{ book.ID }}')">
                 <div class="book-details" value="{{ book }}">
                     <h5>📖 {{ book.Title }}</h5>
                     <p>👤 {{ book.Author }}</p>
                     <input type="hidden" class="hidden-details" value="{{ book.Publisher }}|{{ book.Year }}|{{ book.Pages }}|{{ book.Language }}|{{ book.Size }}|{{ book.Extension }}">
                 </div>
             </div>
-            <div id="modal" class="modal">
+            <div id="modal-{{ book.ID }}" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
                     <div class="modal-details">
@@ -161,18 +161,20 @@
     });
 
     // Display the book details in the modal
-    function displayDetails(card) {
+    function displayDetails(card, ID) {
+        var modalId = "modal-" + ID; 
+        var modal = document.getElementById(modalId);
         var hiddenDetails = card.querySelector('.hidden-details').value.split('|');
-        var modalTitle = document.querySelector('.modal-title');
-        var modalAuthor = document.querySelector('.modal-author');
-        var modalPublisher = document.querySelector('.modal-publisher');
-        var modalYear = document.querySelector('.modal-year');
-        var modalPages = document.querySelector('.modal-pages');
-        var modalLanguage = document.querySelector('.modal-language');
-        var modalSize = document.querySelector('.modal-size');
-        var modalExtension = document.querySelector('.modal-extension');
-        var bookToDownloadInput = document.querySelector('[name="book_to_download"]');
-        var modal = document.getElementById('modal');
+       
+        // Get the modal elements
+        var modalTitle = modal.querySelector('.modal-title');
+        var modalAuthor = modal.querySelector('.modal-author');
+        var modalPublisher = modal.querySelector('.modal-publisher');
+        var modalYear = modal.querySelector('.modal-year');
+        var modalPages = modal.querySelector('.modal-pages');
+        var modalLanguage = modal.querySelector('.modal-language');
+        var modalSize = modal.querySelector('.modal-size');
+        var modalExtension = modal.querySelector('.modal-extension');
 
         // Set the book details in the modal
         modalTitle.textContent = card.querySelector('h5').textContent.slice(2);
@@ -200,6 +202,9 @@
     )
 
     function closeModal() {
-        document.querySelector(".modal").style.display = "none"
+        var modals = document.querySelectorAll(".modal");
+        modals.forEach(function(modal) {
+            modal.style.display = "none";
+        });
     }
 </script>        
