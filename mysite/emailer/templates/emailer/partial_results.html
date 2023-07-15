@@ -115,6 +115,14 @@
                         title = "Oops!";
                         text = "You didn't enter an email address.";
                         icon = "error";
+                    } else if (response == "Failed to download from all URLs.") {
+                        title = "Sorry!";
+                        text = "The download url is corrupted.";
+                        icon = "error";
+                    } else if (response == "Failed to save the file.") {
+                        title = "Sorry!";
+                        text = "The file couldn't be saved. Please try again later";
+                        icon = "error";
                     }
 
                     Swal.fire({
@@ -128,7 +136,7 @@
                 error: function() {
                     Swal.fire({
                     title: "Error!",
-                    text: "An error occurred.",
+                    text: "Email couldn't be sent. Please try again later.",
                     icon: "error",
                     customClass: 'swal-wide',
                     });

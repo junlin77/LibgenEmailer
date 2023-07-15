@@ -1,15 +1,18 @@
-from django.http import HttpResponse
-import urllib.request
-import os
+from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.shortcuts import render
 from libgen_api import LibgenSearch
+import urllib.request
+import os
 import ast
-import re
-from django.http import JsonResponse
+from .helpers import validate_email, save_file_in_media_root, delete_file
+
 
 def partial_search(request):
+    """
+    Perform a search using the LibgenSearch class and return the results as a partial.
+    """
     if request.htmx:
         s = LibgenSearch()
         title = request.GET.get("title")
@@ -65,6 +68,9 @@ def search(request):
     return render(request, "emailer/search.html", context)
 
 def send_to_kindle(request):
+    """
+    Send the selected book to the Kindle email address.
+    """
     if request.method == "POST":
         item_to_download = ast.literal_eval(request.POST.get("book_to_download")) # convert string to dict
         kindle_email = request.POST.get("kindle_email")
@@ -79,40 +85,31 @@ def send_to_kindle(request):
             return HttpResponse("Invalid email address.")
 
         # resolve_download_links()
-        s = LibgenSearch()
-        
+        s = LibgenSearch() 
         url = s.resolve_download_links(item_to_download)
         
         # Iterate through the download links
         for key in url:
-            try:
-                # Send a GET request to download the file
+            try: # Send a GET request to download the file
                 response = urllib.request.urlopen(url[key])
-                # If the request is successful, break out of the loop
                 break
             except Exception as e:
                 print(f"Failed to download using {key} URL: {str(e)}")
-        else:
-            # If all URLs failed, handle the error or display a message
+        else: # All urls failed
             print("Failed to download from all URLs.")
+            return HttpResponse("Failed to download from all URLs.")
 
+        # Set the filename and destination directory
         filename = os.path.basename(item_to_download['Title'] + '.' + item_to_download['Extension'])
-
-        # Get the Django default file saving directory
         destination_directory = settings.MEDIA_ROOT
-
-        # Create the absolute path to save the file
         file_path = os.path.join(destination_directory, filename)
+        print(f"File path: {file_path}")
 
-        # Save the file to the destination directory
-        with open(file_path, 'wb') as file:
-            file.write(response.read())
-
-        # Check if the file has been successfully saved
-        if os.path.exists(file_path):
+        # Save the file in MEDIA_ROOT
+        if save_file_in_media_root(response, file_path):
             print("File saved successfully in MEDIA_ROOT.")
         else:
-            print("Failed to save the file in MEDIA_ROOT.")
+            return HttpResponse("Failed to save the file.")
 
         # Send the file as an email attachment
         email = EmailMessage(
@@ -133,24 +130,4 @@ def send_to_kindle(request):
             delete_file(file_path)
             return JsonResponse({'success': False})
 
-def validate_email(email):
-    """
-    Perform server-side validation on the email address.
-    Returns True if the email is valid, False otherwise.
-    """
-    # Basic email format validation using regex
-    email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    if not re.match(email_regex, email):
-        return False
-    return True
 
-def delete_file(file_path):
-    try:
-        os.remove(file_path)
-        # Check if the file has been successfully removed
-        if not os.path.exists(file_path):
-            print("File deleted successfully.")
-        else:
-            print("Failed to delete the file.")
-    except OSError as e:
-        print(f"Error deleting the file: {str(e)}")
