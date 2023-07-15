@@ -107,7 +107,7 @@ body.light-mode .toggle-label:hover::before {
     gap: 10px;
     color: rgb(255, 255, 255, 0.16);
     width: 100%;
-    margin: 0 40px;
+    margin: 0 30px;
 }
 
 input {
@@ -146,18 +146,9 @@ input {
     z-index: 1;
 }
   
-.results {
-    color: #fff;
-    margin: 30px 40px;
-}
-
-.results th {
-    color: rgb(255, 255, 255, 0.5);
-}
-
-.modal-content {
+/* .modal-content {
     background-color: rgb(255, 255, 255, 0.2);
-}
+} */
 
 button.btn-primary.send-button {
     background-color: transparent;
@@ -170,9 +161,20 @@ button.btn-primary.send-button:hover {
     transform: scale(1.5);
 }
 
+.results {
+    color: #fff;
+    margin: 30px 30px;
+}
+
+.results th {
+    color: rgb(255, 255, 255, 0.5);
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
+    min-width: 0;
+    /* table-layout: fixed; */
     border: 1px solid #333333;
 }
 
