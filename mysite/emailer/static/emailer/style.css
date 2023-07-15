@@ -106,6 +106,8 @@ body.light-mode .toggle-label:hover::before {
     display: flex;
     gap: 10px;
     color: rgb(255, 255, 255, 0.16);
+    width: 100%;
+    margin: 0 40px;
 }
 
 input {
@@ -114,6 +116,8 @@ input {
     padding: 8px;
     color: inherit;
     border-radius: 5px;
+    width: 100%;
+    min-width: 0;
 }
 
 #titleInput, #authorInput, #extensionInput, #emailInput {
@@ -122,7 +126,9 @@ input {
 
 .input-icon {
     position: relative;
-  }
+    flex: 1;
+    display: flex;
+}
   
 .input-icon input {
     padding-left: 35px; /* Adjust the value based on the icon size and spacing */
