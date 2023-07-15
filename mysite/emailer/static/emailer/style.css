@@ -392,6 +392,17 @@ body.light-mode .loader:after {
     .swal-wide {
         width: 70% !important;
     }
+
+    .footer {
+        flex-direction: column;
+        text-align: center;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    
+    .footer-content {
+        margin-bottom: 10px;
+    }
 }
 
 

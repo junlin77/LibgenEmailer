@@ -41,32 +41,6 @@ def partial_search(request):
         return render(request, "emailer/partial_results.html", context)
     return render(request, "emailer/partial_search.html")
 
-def search(request):
-    s = LibgenSearch()
-    title = request.GET.get("title")
-    author = request.GET.get("author")
-    extension = request.GET.get("extension")
-
-    if title is None: # initial page load
-        results = []
-    elif len(title) >= 3 and author == "" and extension == "": # title search
-        results = s.search_title(title)
-    elif len(title) > 3 and (author != "" or extension != ""): # filtered title search 
-        title_filters = {"Author": author, "Extension": extension}
-        results = s.search_title_filtered(title, title_filters, exact_match=False)
-    elif len(title) < 3 and author != "" and extension == "": # author search
-        results = s.search_author(author)
-    elif len(title) < 3 and author != "" and extension != "": # filtered author search
-        author_filters = {"Extension": extension}
-        results = s.search_author_filtered(author, author_filters, exact_match=False)
-
-    stored_kindle_email = request.session.get("kindle_email")
-    context = {
-        "books": results,
-        "stored_kindle_email": stored_kindle_email
-    }
-    return render(request, "emailer/search.html", context)
-
 def send_to_kindle(request):
     """
     Send the selected book to the Kindle email address.
@@ -122,12 +96,12 @@ def send_to_kindle(request):
 
         try:
             email.send()
-            # Delete the temporary file
-            delete_file(file_path)
-            return JsonResponse({'success': True})
-        except:
-            # Delete the temporary file
-            delete_file(file_path)
-            return JsonResponse({'success': False})
+            success = True
+        except Exception:
+            success = False
+
+        delete_file(file_path)
+        return JsonResponse({'success': success})
+
 
 
