@@ -29,19 +29,19 @@
             <form id="findingForm" hx-get="{% url 'partial_search' %}" hx-target="#results" hx-trigger="input delay:0.0s"> 
                 <div class="input-icon">
                     <i class="fas fa-book"></i>
-                    <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required">
+                    <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required" autocomplete="off">
                 </div>
                 <div class="input-icon">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" id="authorInput" name="author" placeholder="Author">
+                    <input type="text" id="authorInput" name="author" placeholder="Author" autocomplete="off">
                 </div>
                 <div class="input-icon">
                     <i class="fa-solid fa-file"></i>
-                    <input type="text" id="extensionInput" name="extension" placeholder="Extension">
+                    <input type="text" id="extensionInput" name="extension" placeholder="Extension" autocomplete="off">
                 </div>   
                 <div class="input-icon">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="text" id="emailInput" name="email" placeholder="Email"  title="Enter a valid email address">
+                    <input type="text" id="emailInput" name="email" placeholder="Email"  title="Enter a valid email address" autocomplete="off">
                 </div>
             </form>
         </div>
