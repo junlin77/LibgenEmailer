@@ -108,12 +108,12 @@
                         text = "Sent successfully to: " + email;
                         icon = "success";
                     } else if (response == "Invalid email address.") {
-                        title = "Error!";
-                        text = "Please input correct email format.";
-                        icon = "error";
-                    } else {
                         title = "Oops!";
-                        text = "There's been an error :(";
+                        text = "Please enter valid email format.";
+                        icon = "error";
+                    } else if (response == "No email address provided.") {
+                        title = "Oops!";
+                        text = "You didn't enter an email address.";
                         icon = "error";
                     }
 

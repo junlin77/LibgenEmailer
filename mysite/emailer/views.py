@@ -71,7 +71,10 @@ def send_to_kindle(request):
         print(f"Kindle email: {kindle_email}")
 
         # Server-side email validation
-        if not validate_email(kindle_email):
+        if len(kindle_email) == 0:
+            print("No email address provided.")
+            return HttpResponse("No email address provided.")
+        elif not validate_email(kindle_email):
             print("Invalid email address.")
             return HttpResponse("Invalid email address.")
 
