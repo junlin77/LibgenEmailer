@@ -85,6 +85,7 @@ def send_to_kindle(request):
             print("Email sent successfully.")
             success = True
         else:
+            delete_file(file_path)
             return HttpResponse("Failed to send the email.")
 
         delete_file(file_path)
