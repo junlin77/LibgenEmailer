@@ -1,5 +1,7 @@
 import os
 import re
+import urllib.request
+from django.http import HttpResponse
 
 def validate_email(email):
     """
@@ -11,6 +13,20 @@ def validate_email(email):
     if not re.match(email_regex, email):
         return False
     return True
+
+def iterate_download_links(url):
+    for key in url:
+        try:
+            response = urllib.request.urlopen(url[key])
+            break
+        except Exception as e:
+            print(f"Failed to download using {key} URL: {str(e)}")
+    else:
+        print("Failed to download from all URLs.")
+        return HttpResponse("Failed to download from all URLs.")
+    
+    # Process the successful response as needed
+    return response
 
 def save_file_in_media_root(response, file_path):
     """

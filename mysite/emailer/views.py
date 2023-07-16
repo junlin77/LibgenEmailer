@@ -6,7 +6,7 @@ from libgen_api import LibgenSearch
 import urllib.request
 import os
 import ast
-from .helpers import validate_email, save_file_in_media_root, delete_file
+from .helpers import validate_email, iterate_download_links, save_file_in_media_root, delete_file
 
 
 def partial_search(request):
@@ -59,19 +59,16 @@ def send_to_kindle(request):
             return HttpResponse("Invalid email address.")
 
         # resolve_download_links()
-        s = LibgenSearch() 
-        url = s.resolve_download_links(item_to_download)
-        
+        try:
+            s = LibgenSearch() 
+            url = s.resolve_download_links(item_to_download)
+        except Exception as e:
+            # Handle the exception or log the error message
+            print(f"Failed to resolve download links: {str(e)}")
+            return HttpResponse("Failed to resolve download links.")
+
         # Iterate through the download links
-        for key in url:
-            try: # Send a GET request to download the file
-                response = urllib.request.urlopen(url[key])
-                break
-            except Exception as e:
-                print(f"Failed to download using {key} URL: {str(e)}")
-        else: # All urls failed
-            print("Failed to download from all URLs.")
-            return HttpResponse("Failed to download from all URLs.")
+        response = iterate_download_links(url)
 
         # Set the filename and destination directory
         filename = os.path.basename(item_to_download['Title'] + '.' + item_to_download['Extension'])
