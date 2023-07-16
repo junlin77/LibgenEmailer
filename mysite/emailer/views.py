@@ -1,12 +1,10 @@
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
-from django.core.mail import EmailMessage
 from django.shortcuts import render
 from libgen_api import LibgenSearch
-import urllib.request
 import os
 import ast
-from .helpers import validate_email, iterate_download_links, save_file_in_media_root, delete_file
+from .helpers import *
 
 
 def partial_search(request):
@@ -83,19 +81,11 @@ def send_to_kindle(request):
             return HttpResponse("Failed to save the file.")
 
         # Send the file as an email attachment
-        email = EmailMessage(
-            'Send to Kindle Test',
-            'Please find the attached file.',
-            settings.DEFAULT_FROM_EMAIL,
-            [kindle_email],
-        )
-        email.attach_file(file_path)
-
-        try:
-            email.send()
+        if send_email_with_attachment(kindle_email, file_path):
+            print("Email sent successfully.")
             success = True
-        except Exception:
-            success = False
+        else:
+            return HttpResponse("Failed to send the email.")
 
         delete_file(file_path)
         return JsonResponse({'success': success})

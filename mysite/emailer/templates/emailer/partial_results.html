@@ -124,6 +124,10 @@
                         title = "Sorry!";
                         text = "The file couldn't be saved. Please try again later";
                         icon = "error";
+                    } else if (response == "Failed to send the email.") {
+                        title = "Sorry!";
+                        text = "The email couldn't be sent. Please try again later";
+                        icon = "error";
                     }
 
                     Swal.fire({
@@ -137,7 +141,7 @@
                 error: function() {
                     Swal.fire({
                     title: "Error!",
-                    text: "Email couldn't be sent. Please try again later.",
+                    text: "Something went wrong. Please try again later.",
                     icon: "error",
                     customClass: 'swal-wide',
                     });

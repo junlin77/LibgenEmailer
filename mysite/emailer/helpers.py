@@ -2,6 +2,8 @@ import os
 import re
 import urllib.request
 from django.http import HttpResponse
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 def validate_email(email):
     """
@@ -39,6 +41,24 @@ def save_file_in_media_root(response, file_path):
     if os.path.exists(file_path):
         return True
     else:
+        return False
+
+def send_email_with_attachment(email_address, file_path):
+    """
+    Sends an email with the attached file to the given email address.
+    """
+    email = EmailMessage(
+        'Send to Kindle Test',
+        'Please find the attached file.',
+        settings.DEFAULT_FROM_EMAIL,
+        [email_address],
+    )
+    email.attach_file(file_path)
+
+    try:
+        email.send()
+        return True
+    except Exception:
         return False
 
 def delete_file(file_path):
