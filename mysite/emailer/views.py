@@ -82,11 +82,9 @@ def send_to_kindle(request):
 
         # Send the file as an email attachment
         if send_email_with_attachment(kindle_email, file_path):
-            print("Email sent successfully.")
             success = True
         else:
-            delete_file(file_path)
-            return HttpResponse("Failed to send the email.")
+            success = False
 
         delete_file(file_path)
         return JsonResponse({'success': success})
