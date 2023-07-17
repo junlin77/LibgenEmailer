@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-2c3kq6uuho!8ghnmxge99qgefth0z&(*0^(04rit5+(t2&ceo4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['libgenemailer.pythonanywhere.com',]
 
 
 # Application definition
