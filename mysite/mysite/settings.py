@@ -138,7 +138,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 
-# CORS
-CORS_ORIGIN_WHITELIST = [
+# CSRF configuration
+CSRF_TRUSTED_ORIGINS = [
     'https://libgenemailer-production.up.railway.app',
 ]
