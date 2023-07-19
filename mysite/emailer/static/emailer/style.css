@@ -138,18 +138,26 @@ input {
     color: rgba(255, 255, 255, 0.16);
 }
 
-.input-icon i {
+.input-icon > .left-icon {
     position: absolute;
-    left: 10px; /* Adjust the value to position the icon */
+    left: 10px; 
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.clear-button {
+    display: none;
+}
+
+.input-icon > .clear-button {
+    position: absolute;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
 }
   
-/* .modal-content {
-    background-color: rgb(255, 255, 255, 0.2);
-} */
-
 button.btn-primary.send-button {
     background-color: transparent;
     border: none;

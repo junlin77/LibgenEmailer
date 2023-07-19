@@ -25,25 +25,30 @@
                 </label>
             </div>                   
         </div>
-        <div class="form">
-            <form id="findingForm" hx-get="{% url 'partial_search' %}" hx-target="#results" hx-trigger="input delay:0.0s"> 
-                <div class="input-icon">
-                    <i class="fas fa-book"></i>
+            <div class="form">
+                <form id="findingForm" hx-get="{% url 'partial_search' %}" hx-target="#results" hx-trigger="input delay:0.0s"> 
+                  <div class="input-icon">
+                    <i class="fas fa-book left-icon"></i>
                     <input type="text" id="titleInput" name="title" placeholder="Title" pattern=".{3,}" title="Minimum 3 characters required" autocomplete="off">
-                </div>
-                <div class="input-icon">
-                    <i class="fa-solid fa-user"></i>
+                    <i class="fa-sharp fa-regular fa-circle-xmark clear-button" data-target="#titleInput"></i>
+                  </div>
+                  <div class="input-icon">
+                    <i class="fa-solid fa-user left-icon"></i>
                     <input type="text" id="authorInput" name="author" placeholder="Author" autocomplete="off">
-                </div>
-                <div class="input-icon">
-                    <i class="fa-solid fa-file"></i>
+                    <i class="fa-sharp fa-regular fa-circle-xmark clear-button" data-target="#authorInput"></i>
+                  </div>
+                  <div class="input-icon">
+                    <i class="fa-solid fa-file left-icon"></i>
                     <input type="text" id="extensionInput" name="extension" placeholder="Extension" autocomplete="off">
-                </div>   
-                <div class="input-icon">
-                    <i class="fa-solid fa-envelope"></i>
-                    <input type="text" id="emailInput" name="email" placeholder="Email"  title="Enter a valid email address" autocomplete="off">
-                </div>
-            </form>
+                    <i class="fa-sharp fa-regular fa-circle-xmark clear-button" data-target="#extensionInput"></i>
+                  </div>   
+                  <div class="input-icon">
+                    <i class="fa-solid fa-envelope left-icon"></i>
+                    <input type="text" id="emailInput" name="email" placeholder="Email" title="Enter a valid email address" autocomplete="off">
+                    <i class="fa-sharp fa-regular fa-circle-xmark clear-button" data-target="#emailInput"></i>
+                  </div>
+                </form>
+            </div>
         </div>
         <section id="results">
             <div class="results">
@@ -128,6 +133,32 @@
         document.getElementById('emailInput').addEventListener('input', function() {
             var email = this.value;
             localStorage.setItem('kindle_email', email);
+        });
+
+        // Display clear button when input is not empty
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputFields = document.querySelectorAll('.input-icon input');
+
+            inputFields.forEach(function(input) {
+            input.addEventListener('input', function() {
+                const clearButton = this.parentElement.querySelector('.clear-button');
+                if (this.value.trim() !== '') {
+                clearButton.style.display = 'block';
+                } else {
+                clearButton.style.display = 'none';
+                }
+            });
+            });
+        });
+
+        // Add event listeners to clear buttons
+        const clearButtons = document.querySelectorAll('.clear-button');
+        clearButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const targetInput = document.querySelector(this.getAttribute('data-target'));
+            targetInput.value = ''; // Clear the input value
+            });
         });
     </script>
 </body>
