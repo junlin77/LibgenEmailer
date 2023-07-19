@@ -135,19 +135,19 @@
             localStorage.setItem('kindle_email', email);
         });
 
-        // Display clear button when input is not empty
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputFields = document.querySelectorAll('.input-icon input');
+        // Show clear button when input has value
+        const inputFields = document.querySelectorAll('.input-icon input');
 
-            inputFields.forEach(function(input) {
+        inputFields.forEach(function(input) {
+            const clearButton = input.parentNode.querySelector('.clear-button');
+
             input.addEventListener('input', function() {
-                const clearButton = this.parentElement.querySelector('.clear-button');
-                if (this.value.trim() !== '') {
-                clearButton.style.display = 'block';
-                } else {
-                clearButton.style.display = 'none';
-                }
+            clearButton.style.display = this.value ? 'block' : 'none';
             });
+
+            clearButton.addEventListener('click', function() {
+            input.value = '';
+            clearButton.style.display = 'none';
             });
         });
 
