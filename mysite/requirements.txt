@@ -4,9 +4,11 @@ beautifulsoup4==4.12.2
 bs4==0.0.1
 certifi==2023.5.7
 charset-normalizer==3.2.0
+click==8.1.6
 Django==4.2.3
 django-htmx==1.16.0
 gunicorn==21.1.0
+h11==0.14.0
 idna==3.4
 libgen-api==1.0.0
 lxml==4.9.3
@@ -17,4 +19,5 @@ soupsieve==2.4.1
 sqlparse==0.4.4
 typing_extensions==4.7.1
 urllib3==2.0.3
+uvicorn==0.23.1
 whitenoise==6.5.0
