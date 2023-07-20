@@ -1,1 +1,1 @@
-web: uvicorn mysite.asgi:application 
+web: gunicorn mysite.wsgi --timeout 120
